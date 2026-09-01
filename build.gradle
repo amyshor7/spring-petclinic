@@ -62,7 +62,10 @@ tasks.named('test') {
   useJUnitPlatform()
 }
 
-tasks.named("cyclonedxDirectBom").configure {
+// Realized eagerly: while building the native task graph, the GraalVM plugin observes the
+// cyclonedxDirectBom configuration as a variant, and lazy creation of the task after that
+// point fails.
+tasks.getByName("cyclonedxDirectBom") {
   dependsOn("compileJava")
   skipConfigs = [".*[Tt]est.*"]
 }

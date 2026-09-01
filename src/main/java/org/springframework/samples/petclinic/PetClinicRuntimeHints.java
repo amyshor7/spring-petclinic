@@ -16,6 +16,11 @@
 
 package org.springframework.samples.petclinic;
 
+import org.thymeleaf.expression.Numbers;
+import org.thymeleaf.expression.Strings;
+import org.thymeleaf.expression.Temporals;
+
+import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.samples.petclinic.model.BaseEntity;
@@ -33,6 +38,11 @@ public class PetClinicRuntimeHints implements RuntimeHintsRegistrar {
 		hints.reflection().registerType(BaseEntity.class, typeHint -> typeHint.withJavaSerialization(true));
 		hints.reflection().registerType(Person.class, typeHint -> typeHint.withJavaSerialization(true));
 		hints.reflection().registerType(Vet.class, typeHint -> typeHint.withJavaSerialization(true));
+		// Thymeleaf expression objects (#strings, #numbers, #temporals) are invoked
+		// reflectively through SpEL when rendering the templates
+		hints.reflection().registerType(Strings.class, MemberCategory.INVOKE_PUBLIC_METHODS);
+		hints.reflection().registerType(Numbers.class, MemberCategory.INVOKE_PUBLIC_METHODS);
+		hints.reflection().registerType(Temporals.class, MemberCategory.INVOKE_PUBLIC_METHODS);
 	}
 
 }
